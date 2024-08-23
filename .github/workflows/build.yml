@@ -46,3 +46,8 @@ jobs:
       run: |
         mkdir -p export/android
         /usr/local/bin/godot --no-window --export "Android" export/android/IAP.apk
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: apk
+        path: export/android/IAP.apk
