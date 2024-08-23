@@ -33,24 +33,13 @@ jobs:
       uses: android-actions/setup-android@v2
       with:
         sdk-version: '30.0.3'
-        ndk-version: '25.2.9519653'  # Specify NDK version if needed
+        ndk-version: '25.2.9519653'
 
-    - name: Generate Keystore
+    - name: Generate Debug Keystore
       run: |
-        keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass "$KEYSTORE_PASSWORD" -keypass "$KEY_PASSWORD" -dname "CN=Android Debug,O=Android,C=US"
+        keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass "${{ secrets.KEYSTORE_PASSWORD }}" -keypass "${{ secrets.KEY_PASSWORD }}" -dname "CN=Android Debug,O=Android,C=US"
 
     - name: Build APK
-      env:
-        GODOT_PROJECT_PATH: ${{ github.workspace }}
-        GODOT_EXPORT_PATH: export/android/IAP.apk
-        GODOT_KEYSTORE_PATH: debug.keystore
-        GODOT_KEYSTORE_ALIAS: androiddebugkey
-        GODOT_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-        GODOT_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: |
         mkdir -p export/android
-        /usr/local/bin/godot --export "Android" $GODOT_EXPORT_PATH \
-          --export-options "keystore/file_path=$GODOT_KEYSTORE_PATH" \
-          --export-options "keystore/alias=$GODOT_KEYSTORE_ALIAS" \
-          --export-options "keystore/password=$GODOT_KEYSTORE_PASSWORD" \
-          --export-options "key/password=$GODOT_KEY_PASSWORD"
+        /usr/local/bin/godot --export "Android" export/android/IAP.apk
