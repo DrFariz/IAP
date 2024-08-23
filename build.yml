@@ -1,0 +1,33 @@
+name: Build Godot APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Download Godot Export Templates
+      run: |
+        curl -L https://downloads.tuxfamily.org/godotengine/3.6/beta5/Godot_v3.6-beta5_export_templates.tpz -o godot-templates.tpz
+
+    - name: Extract Godot Export Templates
+      run: |
+        mkdir -p ~/.local/share/godot/templates
+        unzip godot-templates.tpz -d ~/.local/share/godot/templates
+
+    - name: Download and Install Godot Headless
+      run: |
+        wget https://downloads.tuxfamily.org/godotengine/3.6/beta5/Godot_v3.6-beta5_linux_headless.64.zip
+        unzip Godot_v3.6-beta5_linux_headless.64.zip
+        sudo mv Godot_v3.6-beta5_linux_headless.64 /usr/local/bin/godot
+        chmod +x /usr/local/bin/godot
+
+    - name: Build APK
+      run: |
+        mkdir -p export/android
+        godot --export "Android" export/android/IAP.apk
