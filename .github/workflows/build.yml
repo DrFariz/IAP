@@ -17,8 +17,10 @@ jobs:
 
     - name: Extract Godot Export Templates
       run: |
-        mkdir -p ~/.local/share/godot/templates
-        unzip godot-templates.tpz -d ~/.local/share/godot/templates
+        mkdir -p ~/.local/share/godot/templates/3.6.beta5
+        unzip godot-templates.tpz -d ~/godot-templates
+        mv ~/godot-templates/templates/* ~/.local/share/godot/templates/3.6.beta5/
+        rm -rf ~/godot-templates
 
     - name: Download and Install Godot Headless
       run: |
@@ -27,7 +29,13 @@ jobs:
         sudo mv Godot_v3.6-beta5_linux_headless.64 /usr/local/bin/godot
         chmod +x /usr/local/bin/godot
 
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v2
+      with:
+        sdk-version: '30.0.3'
+        ndk-version: '25.2.9519653'
+
     - name: Build APK
       run: |
         mkdir -p export/android
-        godot --export "Android" export/android/IAP.apk
+        /usr/local/bin/godot --export "Android" export/android/IAP.apk
