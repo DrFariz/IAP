@@ -13,7 +13,7 @@ jobs:
 
     - name: Download Godot Export Templates
       run: |
-        curl -L https://downloads.tuxfamily.org/godotengine/3.6/beta5/Godot_v3.6-beta5_export_templates.tpz -o godot-templates.tpz
+        curl -L ${{ secrets.TEMPLATES_LINK }} -o godot-templates.tpz
 
     - name: Extract Godot Export Templates
       run: |
@@ -24,7 +24,7 @@ jobs:
 
     - name: Download and Install Godot Headless
       run: |
-        wget https://downloads.tuxfamily.org/godotengine/3.6/beta5/Godot_v3.6-beta5_linux_headless.64.zip
+        wget ${{ secrets.GODOT_LINK }}
         unzip Godot_v3.6-beta5_linux_headless.64.zip
         sudo mv Godot_v3.6-beta5_linux_headless.64 /usr/local/bin/godot
         chmod +x /usr/local/bin/godot
@@ -38,9 +38,6 @@ jobs:
     - name: Generate Debug Keystore
       run: |
         keytool -genkey -v -keystore android/debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass vEry2sEcrEtpAsswOrd -keypass vEry2sEcrEtpAsswOrd -dname "CN=Android Debug,O=Android,C=US"
-        ls android
-        ls
-        pwd
 
     - name: Build APK
       run: |
