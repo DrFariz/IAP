@@ -11,9 +11,9 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Use secret in a script
-      run: echo "My secret is ${{ secrets.MY_SECRET }}"
+      run: echo "My secret is ${{ secrets.KEY_PASSWORD }}"
 
     - name: Use secret as environment variable
       run: echo "My secret is $MY_SECRET"
       env:
-        MY_SECRET: ${{ secrets.MY_SECRET }}
+        MY_SECRET: ${{ secrets.KEYSTORE_PASSWORD }}
