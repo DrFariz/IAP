@@ -11,6 +11,14 @@ on:
         required: true
         default: "https://downloads.tuxfamily.org/godotengine/3.6/beta5/Godot_v3.6-beta5_export_templates.tpz"
         description: "Enter Export Templates link:"
+      preset:
+        required: true
+        default: "Android"
+        description: "Enter preset:"
+      filename:
+        required: true
+        description: "Enter file name:"
+
 
 jobs:
   build:
@@ -33,9 +41,10 @@ jobs:
 
     - name: Download and Install Godot Headless
       run: |
-        wget ${{ github.event.inputs.godot_link }}
-        unzip Godot_v3.6-beta5_linux_headless.64.zip
-        sudo mv Godot_v3.6-beta5_linux_headless.64 /usr/local/bin/godot
+        mkdir temp
+        wget ${{ github.event.inputs.godot_link }} -O godot.zip
+        unzip godot.zip -d temp
+        sudo mv temp/* /usr/local/bin/godot
         chmod +x /usr/local/bin/godot
 
     - name: Set up Android SDK
@@ -46,14 +55,14 @@ jobs:
 
     - name: Generate Debug Keystore
       run: |
-        keytool -genkey -v -keystore android/debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass vEry2sEcrEtpAsswOrd -keypass vEry2sEcrEtpAsswOrd -dname "CN=Android Debug,O=Android,C=US"
+        keytool -genkey -v -keystore /debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass vEry2sEcrEtpAsswOrd -keypass vEry2sEcrEtpAsswOrd -dname "CN=Android Debug,O=Android,C=US"
 
     - name: Build APK
       run: |
-        mkdir -p export/android
+        mkdir -p export
         /usr/local/bin/godot --no-window --export "Android" export/android/IAP.apk
-    - name: Upload APK
+    - name: Upload result to artifact
       uses: actions/upload-artifact@v3
       with:
-        name: apk
-        path: export/android/IAP.apk
+        name: ${{ github.event.inputs.filename }}
+        path: /android/IAP.apk
