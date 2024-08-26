@@ -1,0 +1,20 @@
+name: Contoh Workflow dengan Input
+
+on:
+  workflow_dispatch:
+    inputs:
+      versi_godot:
+        description: "Masukkan versi Godot yang ingin digunakan"
+        required: true
+        default: "3.6"
+      link_templates:
+        description: "Masukkan link Export Templates"
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cek Input Versi Godot
+        run: echo "Versi Godot yang dipilih: ${{ github.event.inputs.versi_godot }}"
