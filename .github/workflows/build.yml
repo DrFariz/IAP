@@ -2,6 +2,15 @@ name: Build Godot APK
 
 on:
   workflow_dispatch:
+    inputs:
+      godot_link:
+        required: true
+        default: "https://downloads.tuxfamily.org/godotengine/3.6/beta5/Godot_v3.6-beta5_linux_headless.64.zip"
+        description: "Enter Godot link:"
+      templates_link:
+        required: true
+        default: "https://downloads.tuxfamily.org/godotengine/3.6/beta5/Godot_v3.6-beta5_export_templates.tpz"
+        description: "Enter Export Templates link:"
 
 jobs:
   build:
@@ -24,7 +33,7 @@ jobs:
 
     - name: Download and Install Godot Headless
       run: |
-        wget ${{ secrets.GODOT_LINK }}
+        wget ${{ github.event.inputs.godot_link }}
         unzip Godot_v3.6-beta5_linux_headless.64.zip
         sudo mv Godot_v3.6-beta5_linux_headless.64 /usr/local/bin/godot
         chmod +x /usr/local/bin/godot
