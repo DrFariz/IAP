@@ -43,7 +43,7 @@ jobs:
       STOREPASS: ${{ github.event.inputs.storepass }}
       KEYPASS: ${{ github.event.inputs.keypass }}
       FILENAME: ${{ github.event.inputs.filename }}
-      EXTS: '{"Android": ".apk", "Windows Desktop": ".exe", "Mac OSX": ".dmg", "Linux": ".tar.gz"}'
+      EXTS: '{"Android": ".apk", "Windows Desktop": ".exe", "Mac OSX": ".dmg", "Linux": ".tar.gz", "HTML5": ".html"}'
  
     steps:
     - name: Checkout repository
