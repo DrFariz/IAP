@@ -43,6 +43,7 @@ jobs:
       STOREPASS: ${{ github.event.inputs.storepass }}
       KEYPASS: ${{ github.event.inputs.keypass }}
       FILENAME: ${{ github.event.inputs.filename }}
+      EXTS: '{"Android": ".apk", "Windows Desktop": ".exe", "Mac OSX": ".dmg", "Linux": ".tar.gz"}'
  
     steps:
     - name: Checkout repository
@@ -81,9 +82,8 @@ jobs:
         
     - name: Export
       run: |
-        EXTS="{'Android': '.apk', 'Windows Desktop': '.exe', 'Mac OSX': '.dmg', 'Linux': '.tar.gz'}"
         mkdir -p export
-        EXT=${{ fromJSON(EXTS)[env.PLATFORM] || '.zip' }}
+        EXT=${{ fromJSON(env.EXTS)[env.PLATFORM] || '.zip' }}
         echo "EXT=${EXT}" >> $GITHUB_ENV
         godot --no-window --export "$PLATFORM" export/$FILENAME$EXT
 
