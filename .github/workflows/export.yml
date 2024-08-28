@@ -95,4 +95,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: ${{ env.FILENAME }}
-        path: /export/${{ env.FILENAME }}${{ env.EXT }}
+        path: ./export/${{ env.FILENAME }}${{ env.EXT }}
