@@ -67,7 +67,7 @@ jobs:
         chmod +x /usr/local/bin/godot
 
     - name: Set up Android SDK
-      if: ${{ env.PLATFORM == Android" }}
+      if: ${{ env.PLATFORM == Android }}
       uses: android-actions/setup-android@v2
       with:
         sdk-version: '30.0.3'
