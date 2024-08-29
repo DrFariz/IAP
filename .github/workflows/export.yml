@@ -67,14 +67,14 @@ jobs:
         sudo mv Godot_* /usr/local/bin/godot
         chmod +x /usr/local/bin/godot
 
-    - name: Set up Android SDK (Android only)
+    - name: Set up Android SDK (Only for Android)
       if: ${{ env.PLATFORM == 'Android' }}
       uses: android-actions/setup-android@v2
       with:
         sdk-version: '30.0.3'
         ndk-version: '25.2.9519653'
 
-    - name: Generate Keystore (Android only)
+    - name: Generate Keystore (Only for Android)
       if: ${{ env.PLATFORM == 'Android' }}
       run: |
         keytool -genkey -v -keystore /debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass vEry2sEcrEtpAsswOrd -keypass vEry2sEcrEtpAsswOrd -dname "CN=Android Debug,O=Android,C=US"
@@ -86,13 +86,10 @@ jobs:
         EXT=${{ fromJSON(env.EXTS)[env.PLATFORM] || '.zip' }}
         echo "EXT=${EXT}" >> $GITHUB_ENV
         godot --no-window --export "$PLATFORM" export/${{ env.FILENAME }}${{ env.EXT }}
-        echo ------
-        ls -R
-        echo ------
-        ls -R export
+        zip result.zip export/
 
     - name: Upload result to artifact
       uses: actions/upload-artifact@v3
       with:
         name: ${{ env.FILENAME }}
-        path: ./export/${{ env.FILENAME }}${{ env.EXT }}
+        path: result.zip
