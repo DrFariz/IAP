@@ -80,7 +80,7 @@ jobs:
     - name: Generate Keystore (Only for Android)
       if: ${{ env.PLATFORM == 'Android' }}
       run: |
-        keytool -genkey -v -keystore /key.keystore -alias ${{ env.USER }} -keyalg RSA -keysize 2048 -validity 10000 -storepass ${{ env.STOREPASS }} -keypass ${{ env.KEYPASS }} -dname "CN=Android Export,O=Android,C=US"
+        keytool -genkey -v -keystore key.keystore -alias ${{ env.USER }} -keyalg RSA -keysize 2048 -validity 10000 -storepass ${{ env.STOREPASS }} -keypass ${{ env.KEYPASS }} -dname "CN=Android Export,O=Android,C=US"
 
     - name: Export
       run: |
