@@ -58,9 +58,9 @@ jobs:
 
     - name: Extract Godot Export Templates
       run: |
-        mkdir -p ~/.local/share/godot/templates/3.6.beta5
+        mkdir -p ~/.local/share/godot/templates/3.6.rc1
         unzip godot-templates.tpz -d ~/godot-templates
-        mv ~/godot-templates/templates/* ~/.local/share/godot/templates/3.6.beta5/
+        mv ~/godot-templates/templates/* ~/.local/share/godot/templates/3.6.rc1/
         rm -rf ~/godot-templates
 
     - name: Download and Install Godot
