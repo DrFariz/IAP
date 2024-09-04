@@ -26,6 +26,8 @@ on:
         required: true
         description: "Enter file name:"
         pattern: "^[a-zA-Z0-9_]+$"
+      user:
+        description: "Enter user:"
       storepass:
         description: "Enter keystore (min 6 char, no spaces, must include letters, and numbers. Only for Android):"
         pattern: '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$'
@@ -42,6 +44,7 @@ jobs:
       PLATFORM: ${{ github.event.inputs.platform }}
       STOREPASS: ${{ github.event.inputs.storepass }}
       KEYPASS: ${{ github.event.inputs.keypass }}
+      USER: ${{ github.event.inputs.user }}
       FILENAME: ${{ github.event.inputs.filename }}
       EXTS: '{"Android": ".apk", "Windows Desktop": ".exe", "Mac OSX": ".dmg", "Linux": ".tar.gz", "HTML5": ".html"}'
  
@@ -77,9 +80,8 @@ jobs:
     - name: Generate Keystore (Only for Android)
       if: ${{ env.PLATFORM == 'Android' }}
       run: |
-        keytool -genkey -v -keystore /debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass vEry2sEcrEtpAsswOrd -keypass vEry2sEcrEtpAsswOrd -dname "CN=Android Debug,O=Android,C=US"
-        keytool -genkey -v -keystore /release.keystore -alias androidreleasekey -keyalg RSA -keysize 2048 -validity 10000 -storepass vEry2sEcrEtpAsswOrd -keypass vEry2sEcrEtpAsswOrd -dname "CN=Android Debug,O=Android,C=US"
-        
+        keytool -genkey -v -keystore /key.keystore -alias ${{ env.USER }} -keyalg RSA -keysize 2048 -validity 10000 -storepass ${{ env.STOREPASS }} -keypass ${{ env.KEYPASS }} -dname "CN=Android Export,O=Android,C=US"
+
     - name: Export
       run: |
         mkdir -p export
