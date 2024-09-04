@@ -21,7 +21,7 @@ on:
           - "HTML5"
           - "Windows Desktop"
           - "Linux/X11"
-          - "Mac OSX"          
+          - "Mac OSX"
       filename:
         required: true
         description: "Enter file name:"
@@ -78,7 +78,7 @@ jobs:
       if: ${{ env.PLATFORM == 'Android' }}
       run: |
         keytool -genkey -v -keystore /debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass vEry2sEcrEtpAsswOrd -keypass vEry2sEcrEtpAsswOrd -dname "CN=Android Debug,O=Android,C=US"
-        keytool -genkey -v -keystore /release.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass vEry2sEcrEtpAsswOrd -keypass vEry2sEcrEtpAsswOrd -dname "CN=Android Debug,O=Android,C=US"
+        keytool -genkey -v -keystore /release.keystore -alias androidreleasekey -keyalg RSA -keysize 2048 -validity 10000 -storepass vEry2sEcrEtpAsswOrd -keypass vEry2sEcrEtpAsswOrd -dname "CN=Android Debug,O=Android,C=US"
         
     - name: Export
       run: |
