@@ -87,9 +87,7 @@ jobs:
         mkdir -p export
         EXT=${{ fromJSON(env.EXTS)[env.PLATFORM] || '.zip' }}
         echo "EXT=${EXT}" >> $GITHUB_ENV
-        echo export/$FILENAME${{ env.EXT }}
-        echo "${{ env.EXTS }}   $EXT"
-        godot --no-window --export "$PLATFORM" export/$FILENAME${{ env.EXT }}
+        godot --no-window --export "$PLATFORM" export/$FILENAME$EXT
         zip -r result.zip export/
 
     - name: Upload result to artifact
