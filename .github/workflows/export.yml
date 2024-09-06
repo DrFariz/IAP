@@ -29,7 +29,7 @@ on:
       path:
         required: true
         description: "Enter version (for template path):"
-        default: "3.6/beta5"
+        default: "3.6.beta5"
       user:
         description: "Enter user (Only for Android):"
       storepass:
