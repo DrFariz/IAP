@@ -26,8 +26,12 @@ on:
         required: true
         description: "Enter file name:"
         pattern: "^[a-zA-Z0-9_]+$"
+      path:
+        required: true
+        description: "Enter version (for template path):"
+        default: "3.6/beta5"
       user:
-        description: "Enter user:"
+        description: "Enter user (Only for Android):"
       storepass:
         description: "Enter keystore (min 6 char, no spaces, must include letters, and numbers. Only for Android):"
         pattern: '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$'
@@ -46,6 +50,7 @@ jobs:
       KEYPASS: ${{ github.event.inputs.keypass }}
       USER: ${{ github.event.inputs.user }}
       FILENAME: ${{ github.event.inputs.filename }}
+      TPATH: ${{ github.event.inputs.path }}
       EXTS: '{"Android": ".apk", "Windows Desktop": ".exe", "Mac OSX": ".dmg", "Linux": ".tar.gz", "HTML5": ".html"}'
  
     steps:
@@ -58,9 +63,9 @@ jobs:
 
     - name: Extract Godot Export Templates
       run: |
-        mkdir -p ~/.local/share/godot/templates/3.6.rc1
+        mkdir -p ~/.local/share/godot/templates/$TPATH
         unzip godot-templates.tpz -d ~/godot-templates
-        mv ~/godot-templates/templates/* ~/.local/share/godot/templates/3.6.rc1/
+        mv ~/godot-templates/templates/* ~/.local/share/godot/templates/$TPATH/
         rm -rf ~/godot-templates
 
     - name: Download and Install Godot
