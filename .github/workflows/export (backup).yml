@@ -1,0 +1,112 @@
+name: Export Godot Project (backup)
+
+on:
+  workflow_dispatch:
+    inputs:
+      godot_link:
+        required: true
+        default: "https://downloads.tuxfamily.org/godotengine/3.6/beta5/Godot_v3.6-beta5_linux_headless.64.zip"
+        description: "Enter Godot link:"
+      templates_link:
+        required: true
+        default: "https://downloads.tuxfamily.org/godotengine/3.6/beta5/Godot_v3.6-beta5_export_templates.tpz"
+        description: "Enter Export Templates link:"
+      platform:
+        required: true
+        default: "Android"
+        description: "Enter platform:"
+        type: choice
+        options:
+          - "Android"
+          - "HTML5"
+          - "Windows Desktop"
+          - "Linux/X11"
+          - "Mac OSX"
+      filename:
+        required: true
+        description: "Enter file name:"
+        pattern: "^[a-zA-Z0-9_]+$"
+      path:
+        required: true
+        description: "Enter version (for template path):"
+        default: "3.6.beta5"
+      user:
+        description: "Enter user (Only for Android):"
+      storepass:
+        description: "Enter keystore (min 6 char, no spaces, must include letters, and numbers. Only for Android):"
+        pattern: '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$'
+      keypass:
+        description: "Enter keypass (min 6 char, no spaces, must include letters, and numbers. Only for Android):"
+        pattern: '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$'
+        
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GODOT_LINK: ${{ inputs.godot_link }}
+      TEMPLATES_LINK: ${{ inputs.templates_link }}
+      PLATFORM: ${{ inputs.platform }}
+      STOREPASS: ${{ inputs.storepass }}
+      KEYPASS: ${{ inputs.keypass }}
+      USER: ${{ inputs.user }}
+      FILENAME: ${{ inputs.filename }}
+      TPATH: ${{ inputs.path }}
+      EXTS: '{"Android": ".apk", "Windows Desktop": ".exe", "Mac OSX": ".dmg", "Linux/X11": ".x86_64"}'
+ 
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Download Godot Export Templates
+      run: |
+        curl -L $TEMPLATES_LINK -o godot-templates.tpz
+
+    - name: Extract Godot Export Templates
+      run: |
+        mkdir -p ~/.local/share/godot/templates/$TPATH
+        unzip godot-templates.tpz -d ~/godot-templates
+        mv ~/godot-templates/templates/* ~/.local/share/godot/templates/$TPATH/
+        rm -rf ~/godot-templates
+
+    - name: Download and Install Godot
+      run: |
+        wget $GODOT_LINK -O godot.zip
+        unzip godot.zip
+        sudo mv Godot_* /usr/local/bin/godot
+        chmod +x /usr/local/bin/godot
+
+    - name: Set up Android SDK (Only for Android)
+      if: ${{ env.PLATFORM == 'Android' }}
+      uses: android-actions/setup-android@v3
+
+    - name: Generate Keystore (Only for Android)
+      if: ${{ env.PLATFORM == 'Android' }}
+      run: |
+        keytool -genkey -v -keystore key.keystore -alias ${{ env.USER }} -keyalg RSA -keysize 2048 -validity 10000 -storepass ${{ env.STOREPASS }} -keypass ${{ env.KEYPASS }} -dname "CN=Android Export,O=Android,C=US"
+
+    - name: Check Version
+      run: |
+        VERSION=$(godot --version)
+        echo "Detected Godot version: $VERSION"
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+    - name: Export
+      run: |
+        mkdir -p export
+        EXT=${{ fromJSON(env.EXTS)[env.PLATFORM] || '.zip' }}
+        echo "EXT=${EXT}" >> $GITHUB_ENV
+        VERSION=$(godot --version)
+        echo "version: $VERSION"
+        if [[ $VERSION =~ 3\.[0-9]+ ]]; then
+          echo "Godot version 3.x detected"
+          godot --no-window --export "$PLATFORM" export/$FILENAME$EXT
+        elif [[ $VERSION =~ 4\.[0-9]+ ]]; then
+          echo "Godot version 4.x detected"
+          godot --headless --export-release "$PLATFORM" export/$FILENAME$EXT
+        fi
+        
+    - name: Upload result to artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.FILENAME }}
+        path: export/
