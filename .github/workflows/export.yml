@@ -50,15 +50,9 @@ jobs:
       
     - name: Preaparing
       run: |
-        if [ ${{ inputs.version }} ]; then
-          echo "GODOT_URL=https://download.tuxfamily.org/godotengine/4.4/dev3/Godot_v4.4-dev3_linux.x86_64.zip" >> $GITHUB_ENV
-          echo "TEMPLATES_URL=https://download.tuxfamily.org/godotengine/4.4/dev3/Godot_v4.4-dev3_export_templates.tpz" >> $GITHUB_ENV
-          echo "VERSION=4.4.dev3" >> $GITHUB_ENV
-        else
-          echo "GODOT_URL=https://download.tuxfamily.org/godotengine/3.6/Godot_v3.6-stable_linux_headless.64.zip" >> $GITHUB_ENV
-          echo "TEMPLATES_URL=https://download.tuxfamily.org/godotengine/3.6/Godot_v3.6-stable_export_templates.tpz" >> $GITHUB_ENV
-          echo "VERSION=3.6.stable" >> $GITHUB_ENV
-        fi
+        echo "GODOT_URL=https://download.tuxfamily.org/godotengine/3.6/Godot_v3.6-stable_linux_headless.64.zip" >> $GITHUB_ENV
+        echo "TEMPLATES_URL=https://download.tuxfamily.org/godotengine/3.6/Godot_v3.6-stable_export_templates.tpz" >> $GITHUB_ENV
+        echo "VERSION=3.6.stable" >> $GITHUB_ENV
 
     - name: Download Godot Export Templates
       run: |
