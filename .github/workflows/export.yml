@@ -62,7 +62,7 @@ jobs:
       run: |
         mkdir -p ~/.local/share/godot/export_templates/$VERSION
         unzip godot-templates.tpz -d ~/godot-templates
-        mv ~/godot-templates/templates/* ~/.local/share/godot/export_templates/$VERSION/
+        mv ~/godot-templates/templates/* ~/.local/share/godot/templates/$VERSION/
         rm -rf ~/godot-templates
 
     - name: Download and Install Godot
