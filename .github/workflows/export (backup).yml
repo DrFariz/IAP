@@ -5,11 +5,11 @@ on:
     inputs:
       godot_link:
         required: true
-        default: "https://downloads.tuxfamily.org/godotengine/3.6/beta5/Godot_v3.6-beta5_linux_headless.64.zip"
+        default: "https://download.tuxfamily.org/godotengine/3.6/Godot_v3.6-stable_linux_headless.64.zip"
         description: "Enter Godot link:"
       templates_link:
         required: true
-        default: "https://downloads.tuxfamily.org/godotengine/3.6/beta5/Godot_v3.6-beta5_export_templates.tpz"
+        default: "https://download.tuxfamily.org/godotengine/3.6/Godot_v3.6-stable_export_templates.tpz"
         description: "Enter Export Templates link:"
       platform:
         required: true
@@ -77,7 +77,7 @@ jobs:
 
     - name: Set up Android SDK (Only for Android)
       if: ${{ env.PLATFORM == 'Android' }}
-      uses: android-actions/setup-android@v3
+      uses: android-actions/setup-android@v2
 
     - name: Generate Keystore (Only for Android)
       if: ${{ env.PLATFORM == 'Android' }}
