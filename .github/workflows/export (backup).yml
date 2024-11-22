@@ -99,7 +99,7 @@ jobs:
         echo "version: $VERSION"
         if [[ $VERSION =~ 3\.[0-9]+ ]]; then
           echo "Godot version 3.x detected"
-          godot --headless --export-release "$PLATFORM" export/$FILENAME$EXT
+          godot --no-window --export "$PLATFORM" export/$FILENAME$EXT
         elif [[ $VERSION =~ 4\.[0-9]+ ]]; then
           echo "Godot version 4.x detected"
           godot --headless --export-release "$PLATFORM" export/$FILENAME$EXT
